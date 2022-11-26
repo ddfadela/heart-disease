@@ -22,7 +22,7 @@ def predict():
     RestingECG = request.form['RestingECG']
     MaxHR = int(request.form['MaxHR'])
     ExerciseAngina = request.form['ExerciseAngina']
-    Oldpeak = int(request.form['Oldpeak'])
+    Oldpeak = float(request.form['Oldpeak'])
     ST_Slope =request.form['ST_Slope']
     
     #final_features = [Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS,RestingECG,MaxHR,ExerciseAngina,Oldpeak,ST_Slope]
@@ -41,10 +41,12 @@ def predict():
     "ST_Slope": [ST_Slope]
 })
     prediction= model.predict(final_features) 
+    prediction_proba =model.predict_proba(final_features)
+    output='{0:.{1}f}'.format(prediction_proba[0][1], 2)
     if prediction == [0] :
-     return render_template('index.html',prediction_text=f'This person is in good health  ${prediction}')
+     return render_template('index.html',prediction_text=f'This person is in good health ' )
     else :
-     return render_template('index.html',prediction_text=f'This person have heart disease with percentage of   ${prediction}')
+     return render_template('index.html',prediction_text=f'This person have heart disease with percentage of   {output}')
 
 
 if __name__ == '__main__':
